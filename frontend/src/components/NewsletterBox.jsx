@@ -1,4 +1,7 @@
 const NewsLetterBox = () => {
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+  };
   return (
     <div className="text-center ">
       <p className="text-2xl font-medium text-gray-800">
@@ -8,7 +11,10 @@ const NewsLetterBox = () => {
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, at.
       </p>
 
-      <form className="w-full sm:w-1/2 flex items-center gap-3 mx-auto my-6 border border-gray-300 pl-3 rounded-1.5xl">
+      <form
+        onSubmit={onSubmitHandler}
+        className="w-full sm:w-1/2 flex items-center gap-3 mx-auto my-6 border border-gray-300 pl-3 rounded-1.5xl"
+      >
         <input
           type="email"
           placeholder="Enter your email"

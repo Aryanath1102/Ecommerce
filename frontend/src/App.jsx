@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Collection from "./pages/Collection";
 import About from "./pages/About";
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/placeOrder" element={<PlaceOrder />} />
         <Route path="/orders" element={<Orders />} />
       </Routes>
+      <Footer />
     </div>
   );
 };
