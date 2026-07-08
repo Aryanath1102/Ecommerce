@@ -15,6 +15,29 @@ const Footer = () => {
             eligendi voluptatem.
           </p>
         </div>
+
+        <div>
+          <p className="text-xl font-medium mb-5">COMPANY</p>
+          <ul className="flex flex-col gap-1 text-gray-600">
+            <li>Home</li>
+            <li>About us</li>
+            <li>Delivery</li>
+            <li>Privacy policy</li>
+          </ul>
+        </div>
+        <div>
+          <p className="text-xl font-medium mb-5">GET IN TOUCH </p>
+          <ul className="flex flex-col gap-1 text-gray-600">
+            <li>+1-212-456-7890</li>
+            <li>contact@foreveryou.com </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <hr />
+        <p className="py-5 text-sm text-center">
+          Copyright 2026@ forever.com - All Rights Reserved.
+        </p>
       </div>
     </div>
   );
