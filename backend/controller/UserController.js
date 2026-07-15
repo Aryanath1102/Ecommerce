@@ -1,5 +1,11 @@
 const UserModel = require("../models/UserModel");
 const bcrypt = require("bcrypt");
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
+
+// const createToken = (id) => {
+//   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
+// };
 
 // Route for Login User
 const loginUser = async (req, res) => {
@@ -8,12 +14,12 @@ const loginUser = async (req, res) => {
 
     // Validation
     if (!email || !password) {
-      res.status(500).send({
+      return res.status(500).send({
         success: false,
         msg: "Please provide all details.",
-        error,
       });
     }
+
     //   Check User
 
     const user = await UserModel.findOne({ email });
@@ -27,13 +33,25 @@ const loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(500).send({ success: false, msg: "Invalid Password" });
     }
-    res.status(200).send({ success: true, msg: "Login Successfully", user });
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "7d" },
+    );
+
+    res
+      .status(200)
+      .send({ success: true, msg: "Login Successfully", user, token });
   } catch (error) {
     res.status(500).send({
       success: false,
       msg: "Error in Login API",
 
-      error,
+      error: error.message,
     });
   }
 };
@@ -44,11 +62,18 @@ const registerUser = async (req, res) => {
   try {
     const { name, email, password, cartData } = req.body;
 
-    // Validation
-    if (!name || !email || !password) {
+    // Check if valid email and password format
+
+    if (!validator.isEmail(email)) {
       return res
         .status(500)
-        .send({ success: false, msg: "Please provide all details." });
+        .send({ success: false, msg: "Please provide valid email." });
+    }
+    if (password.length < 8) {
+      return res.status(500).send({
+        success: false,
+        msg: "Please provide enter a strong password of length 8.",
+      });
     }
 
     // check existing
@@ -62,26 +87,57 @@ const registerUser = async (req, res) => {
     }
 
     // hashing password
-    var salt = bcrypt.genSaltSync(10);
-
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await UserModel.create({
+    const newUser = await new UserModel({
       name,
       email,
       password: hashedPassword,
-      cartData,
     });
+
+    const user = await newUser.save();
+
     res.status(201).send({ success: true, msg: "Successfully Registered" });
   } catch (error) {
-    res.status(500).send({ success: false, error });
+    res.status(500).send({
+      success: false,
+      msg: "Error in Register User ",
+      error: error.message,
+    });
   }
 };
 
 // Route For ADMIN LOGIN
 
 const adminLogin = async (req, res) => {
-  res.send({ msg: "ADMIN api working" });
+  try {
+    const { email, password } = req.body;
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      const token = jwt.sign(
+        {
+          email,
+          role: "ADMIN",
+        },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "7d" },
+      );
+      res.status(200).send({
+        success: true,
+        msg: "Admin Logged In Successfully.",
+        token,
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      msg: "Error in Admin Login",
+      error: error.message,
+    });
+  }
 };
 
 module.exports = { loginUser, registerUser, adminLogin };
