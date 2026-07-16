@@ -1,4 +1,3 @@
-// config/cloudinary.js
 const cloudinary = require("cloudinary").v2;
 
 const connectCloudinary = async () => {
@@ -9,4 +8,7 @@ const connectCloudinary = async () => {
   });
 };
 
-module.exports = connectCloudinary;
+module.exports = {
+  cloudinary,
+  connectCloudinary,
+};

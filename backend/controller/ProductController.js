@@ -1,6 +1,5 @@
 const productModel = require("../models/ProductModel");
-
-// ADD Product
+const { cloudinary } = require("../config/cloudinary"); // ADD Product
 
 const addProductController = async (req, res) => {
   console.log("BODY REQ:", req.body);
@@ -24,10 +23,17 @@ const addProductController = async (req, res) => {
     const image4 = req.files?.image4?.[0];
 
     // Filter out undefined fields and extract filenames/paths
-    const imagesArray = [image1, image2, image3, image4]
-      .filter((img) => img !== undefined)
-      .map((img) => img.path || img.filename); // Saves the reference location name string
+    const images = [image1, image2, image3, image4].filter(Boolean);
 
+    const imagesArray = [];
+
+    for (const image of images) {
+      const result = await cloudinary.uploader.upload(image.path, {
+        resource_type: "image",
+      });
+
+      imagesArray.push(result.secure_url);
+    }
     // 2. Input Integrity Validation
     if (
       !name ||

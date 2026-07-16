@@ -40,7 +40,7 @@ const loginUser = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: "7d" },
+      { expiresIn: "5m" },
     );
 
     res
@@ -123,7 +123,7 @@ const adminLogin = async (req, res) => {
           role: "ADMIN",
         },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: "7d" },
+        { expiresIn: "5m" },
       );
       res.status(200).send({
         success: true,

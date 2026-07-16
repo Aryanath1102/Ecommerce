@@ -20,7 +20,6 @@ productRouter.post(
     { name: "image3", maxCount: 1 },
     { name: "image4", maxCount: 1 },
   ]),
-  authMiddleware,
   addProductController,
 );
 
@@ -32,5 +31,9 @@ productRouter.delete(
   removeProductController,
 );
 productRouter.get("/Product/:id", authMiddleware, singleProductController);
+
+productRouter.get("/hello", (req, res) => {
+  res.send("hello");
+});
 
 module.exports = productRouter;

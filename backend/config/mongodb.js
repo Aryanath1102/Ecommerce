@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
 
 const connectDb = async () => {
-  mongoose.connection.on("connected", () => {
-    console.log("DB Connected");
-  });
+  await mongoose.connect(process.env.MONGODB_URI);
 
-  await mongoose.connect(`${process.env.MONGODB_URI}/e-commerce`);
+  console.log("DB Connected");
+  console.log("Database:", mongoose.connection.db.databaseName);
 };
 
 module.exports = connectDb;

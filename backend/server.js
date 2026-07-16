@@ -3,7 +3,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDb = require("./config/mongodb");
-const connectCloudinary = require("./config/cloudinary");
+const { connectCloudinary } = require("./config/cloudinary");
 const userRouter = require("./routes/userRoute");
 const productRouter = require("./routes/productRouter");
 
