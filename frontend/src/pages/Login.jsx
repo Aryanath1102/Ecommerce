@@ -1,9 +1,43 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ShopContext } from "../context/ShopContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
+  const { token, setToken, navigate, backend_url } = useContext(ShopContext);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
+    try {
+      if (currentState === "Sign Up") {
+        const response = await axios.get(
+          backend_url + "/api/v1/user/register",
+          { name, email, password },
+        );
+        if (response.data.success) {
+          setToken(response.data.token);
+          localStorage.setItem("token", response.data.token);
+        } else {
+          toast.error(response.data.message);
+        }
+      } else {
+        const response = await axios.get(backend_url + "/api/v1/user/login", {
+          name,
+          email,
+        });
+        if (response.data.success) {
+          setToken(response.data.token);
+          localStorage.setItem("token", response.data.token);
+        } else {
+          toast.error(response.data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -25,6 +59,8 @@ const Login = () => {
             type="text"
             placeholder="Name"
             required
+            onChange={(e) => setName(e.target.value)}
+            value={name}
             className="w-full px-4 py-3 border border-gray-500 outline-none"
           />
         )}
@@ -33,6 +69,8 @@ const Login = () => {
           type="email"
           placeholder="Email"
           required
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
           className="w-full px-4 py-3 border border-gray-500 outline-none"
         />
 
@@ -40,6 +78,8 @@ const Login = () => {
           type="password"
           placeholder="Password"
           required
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
           className="w-full px-4 py-3 border border-gray-500 outline-none"
         />
 

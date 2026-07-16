@@ -3,5 +3,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [tailwindcss()],
-  server: { port: 5174 },
+  server: {
+    host: "0.0.0.0",
+    port: 5174,
+  },
 });

@@ -40,7 +40,7 @@ const loginUser = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: "5m" },
+      { expiresIn: "7d" },
     );
 
     res
@@ -98,7 +98,20 @@ const registerUser = async (req, res) => {
 
     const user = await newUser.save();
 
-    res.status(201).send({ success: true, msg: "Successfully Registered" });
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+      },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "7d",
+      },
+    );
+
+    res
+      .status(201)
+      .send({ success: true, msg: "Successfully Registered", token });
   } catch (error) {
     res.status(500).send({
       success: false,
@@ -123,7 +136,7 @@ const adminLogin = async (req, res) => {
           role: "ADMIN",
         },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: "5m" },
+        { expiresIn: "7d" },
       );
       res.status(200).send({
         success: true,
