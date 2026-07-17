@@ -1,7 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
   const { token, setToken, navigate, backend_url } = useContext(ShopContext);
@@ -13,32 +14,46 @@ const Login = () => {
     e.preventDefault();
     try {
       if (currentState === "Sign Up") {
-        const response = await axios.get(
+        const response = await axios.post(
           backend_url + "/api/v1/user/register",
           { name, email, password },
         );
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem("token", response.data.token);
+          toast.success(response.data.msg);
+          setName("");
+          setEmail("");
+          setPassword("");
+          setCurrentState("Login");
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.msg);
         }
       } else {
-        const response = await axios.get(backend_url + "/api/v1/user/login", {
-          name,
+        const response = await axios.post(backend_url + "/api/v1/user/login", {
           email,
+          password,
         });
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem("token", response.data.token);
+          toast.success(response.data.msg);
+          console.log(response.data);
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.msg);
         }
       }
     } catch (error) {
-      toast.error(error.message);
+      console.log(error.response?.data);
+      toast.error(error.response?.data?.msg || error.message);
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token]);
 
   return (
     <div className="border-t border-gray-300">
