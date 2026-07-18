@@ -7,6 +7,7 @@ const { connectCloudinary } = require("./config/cloudinary");
 const userRouter = require("./routes/userRoute");
 const productRouter = require("./routes/productRouter");
 const cartRouter = require("./routes/cartRouter");
+const orderRouter = require("./routes/orderRouter");
 
 // Load environment variables FIRST
 dotenv.config();
@@ -29,6 +30,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/admin", userRouter);
 app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/order", orderRouter);
 
 // Start Server
 app.listen(port, () => console.log(`Server is running on ${port}`));

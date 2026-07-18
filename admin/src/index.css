@@ -4,20 +4,64 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-
-*{
+/* --- Global Light/Dark Foundation --- */
+* {
     font-family: Outfit;
-}
-.active{
-    background-color: #ffebf5;
-    border-color: #C586A5;
-}
-button{
-    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-select,input,textarea{
+/* Base body handling for the whole page background change */
+body {
+    background-color: #ffffff;
+    color: #1a1a1a;
+}
+
+@variant dark {
+    body {
+        background-color: #121212;
+        color: #ffffff;
+    }
+}
+
+/* --- Form Elements (Inputs, Selects, Textareas) --- */
+select, input, textarea {
     border: 1px solid #c2c2c2;
     outline-color: #C586A5;
     border-radius: 4px;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    padding: 6px 10px; /* Quick reset layout spacing padding */
+}
+
+/* Dark mode conversion for input structural fields */
+@variant dark {
+    select, input, textarea {
+        background-color: #1e1e1e;
+        color: #ffffff;
+        border-color: #444444;
+    }
+    
+    /* Targets the inner text color options within dropdown elements */
+    select option {
+        background-color: #1e1e1e;
+        color: #ffffff;
+    }
+}
+
+/* --- Interactive States --- */
+button {
+    cursor: pointer;
+}
+
+.active {
+    background-color: #ffebf5;
+    border-color: #C586A5;
+}
+
+@variant dark {
+    .active {
+        background-color: #3a1f2d; /* Subtle darkened version of your accent background color */
+        border-color: #C586A5;
+    }
 }
